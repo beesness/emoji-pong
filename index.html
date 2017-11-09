@@ -5,7 +5,8 @@
         <title>PONG</title>
         <link href="style.css" rel="stylesheet">
 
-        <!-- load p5.js and its addons -->
+        <!-- load JS libraries -->
+        <script src="lib/dat.gui.min.js"></script>
         <script src="lib/p5.js"></script>
         <script src="lib/p5.play.js"></script>
 
@@ -17,5 +18,12 @@
         <script src="5_draw.js"></script>
     </head>
     <body>
+        <script>
+            window.onload = function() 
+            {
+                var gui = new dat.GUI()
+                gui.add(window, 'swing').listen()
+            }
+        </script>
     </body>
 </html>

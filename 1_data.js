@@ -11,7 +11,6 @@
 
 const CANVAS_WIDTH = 800 // in pixels
 const CANVAS_HEIGHT = 600 // in pixels
-
 const BALL_SIZE = 20
 const BALL_SPEED = 3
 const PADDLE_SIZE = 5
