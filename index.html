@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Parliament PONG</title>
+        <link href="style.css" rel="stylesheet">
 
-<head>
-    <meta charset="UTF-8">
-    <title>emoji test</title>
-    <link href="style.css" rel="stylesheet">
-    
-    <!-- load p5.js and its addons -->
-    <script src="lib/p5.js"></script>
-    <script src="lib/p5.play.js"></script>
-    
-    <!-- load your JS -->
-    <script src="1_data.js"></script>
-    <script src="2_tools.js"></script>
-    <script src="3_preload.js"></script>
-    <script src="4_setup.js"></script>
-    <script src="5_draw.js"></script>
-</head>
+        <!-- load JS libraries -->
+        <script src="lib/dat.gui.min.js"></script>
+        <script src="lib/p5.js"></script>
+        <script src="lib/p5.play.js"></script>
 
-<body>
-</body>
-
+        <!-- load your JS -->
+        <script src="1_data.js"></script>
+        <script src="2_tools.js"></script>
+        <script src="3_preload.js"></script>
+        <script src="4_setup.js"></script>
+        <script src="5_draw.js"></script>
+    </head>
+    <body>
+        <div id="canvas">
+            <!-- the p5 canvas will be generated inside this-->
+        </div>
+<!--
+        <div id="controls">
+            <ul>
+                <li>Labour W + S</li>
+                <li>Conservatives UP + DOWN</li>
+                <li>Greens 7 + 8</li>
+                <li>Liberal Democrats V + B</li>
+            </ul>
+        </div>
+-->
+        <script>
+            window.onload = function() 
+            {
+                var gui = new dat.GUI()
+                gui.add(window, 'swing').listen()
+            }
+        </script>
+    </body>
 </html>

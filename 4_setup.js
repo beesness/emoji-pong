@@ -1,15 +1,17 @@
-function setup() 
+function setup()
 {
     // https://p5js.org/reference/#/p5/createCanvas
-    createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT)
+    canvas = createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT)
+    // move the canvas so it's inside our <div id="canvas">.
+    canvas.parent('canvas')
     
-    // ball
-    // http://p5play.molleindustria.org/docs/classes/p5.play.html#method-createSprite    
+    // ball, aka the press
+    // http://p5play.molleindustria.org/docs/classes/p5.play.html#method-createSprite
     sprites.ball = createSprite(width/2, height/2, EMOJI_SIZE, EMOJI_SIZE)
-    sprites.ball.addAnimation('newspaper', animations.ball)
     sprites.ball.maxSpeed = BALL_SPEED
-    sprites.ball.setSpeed(BALL_SPEED, -180) // TODO RANDOM
-    
+    sprites.ball.shapeColor = 'rgba(255, 255, 255, 0)' // transparent
+    resetBall()
+        
     // paddleLeft, aka Labour
     sprites.paddleLeft = createSprite(EMOJI_SIZE/2, height/2, EMOJI_SIZE, EMOJI_SIZE*PADDLE_SIZE)
     sprites.paddleLeft.immovable = true // this prevents the paddle from being moved by the ball
@@ -33,18 +35,4 @@ function setup()
     sprites.paddleBottom.immovable = true
     sprites.paddleBottom.shapeColor = 'rgba(255, 255, 0, 0.5)'
     sprites.paddleBottom.size = PADDLE_SIZE
-    
-    /*
-  sprites.wallTop = createSprite(width/2, 1, width, 1)
-  sprites.wallTop.immovable = true
-
-  sprites.wallBottom = createSprite(width/2, height-1, width, 1)
-  sprites.wallBottom.immovable = true
-  
-  // all white
-  sprites.wallTop.shapeColor = 
-  sprites.wallBottom.shapeColor = color(255,255,255)
-*/
-  
-
 }
