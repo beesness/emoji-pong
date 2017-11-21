@@ -8,7 +8,7 @@ function setup()
     // ball, aka the press
     // http://p5play.molleindustria.org/docs/classes/p5.play.html#method-createSprite
     sprites.ball = createSprite(width/2, height/2, EMOJI_SIZE, EMOJI_SIZE)
-    sprites.ball.maxSpeed = BALL_SPEED
+//    sprites.ball.maxSpeed = BALL_SPEED
     sprites.ball.shapeColor = 'rgba(255, 255, 255, 0)' // transparent
     resetBall()
     

@@ -51,22 +51,22 @@ function updateBall()
     if (ball.bounce(pL)) 
     {
         swing = (ball.position.y - pL.position.y) * SWING_FACTOR
-        ball.setSpeed(BALL_SPEED, ball.getDirection() + swing)
+        ball.setSpeed(ball.getSpeed(), ball.getDirection() + swing)
     }
     else if (ball.bounce(pR)) 
     {
         swing = (ball.position.y - pR.position.y) * SWING_FACTOR
-        ball.setSpeed(BALL_SPEED, ball.getDirection() - swing)
+        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
     }
     else if (ball.bounce(pT)) 
     {
         swing = (ball.position.x - pT.position.x) * SWING_FACTOR
-        ball.setSpeed(BALL_SPEED, ball.getDirection() - swing)
+        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
     }
     else if (ball.bounce(pB)) 
     {
         swing = (ball.position.x - pB.position.x) * SWING_FACTOR
-        ball.setSpeed(BALL_SPEED, ball.getDirection() - swing)
+        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
     }
     
     // what happens when players miss
@@ -85,6 +85,20 @@ function updateBall()
     else if (ball.position.y > height) // paddleBottom missed
     {
         resetBall()
+    }
+    
+    // experiment
+    // press D to change the ball direction 
+    if (keyDown('d'))
+    {
+        // change the  ball rotation
+        ball.rotation += random(-20, 20)
+        ball.addSpeed(0.2, ball.rotation)
+        
+        // particles, just for the heck of it
+        var particle = createSprite(ball.position.x, ball.position.y, 5, 5)
+        particle.setSpeed(ball.getSpeed() + 5, ball.getDirection())
+        particle.life = 100
     }
 }
 
