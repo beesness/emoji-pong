@@ -13,39 +13,39 @@ function draw()
 
 function updatePaddles()
 {
-    var pL = sprites.paddleLeft, 
-        pR = sprites.paddleRight,
-        pT = sprites.paddleTop,
-        pB = sprites.paddleBottom,
+    var pL = sprites.paddles.left, 
+        pR = sprites.paddles.right,
+        pT = sprites.paddles.top,
+        pB = sprites.paddles.bottom,
         ball = sprites.ball
     
-    // paddleLeft, aka Labour
-    if (keyDown("w")) pL.position.y -= PADDLE_MOVEMENT
-    if (keyDown("s")) pL.position.y += PADDLE_MOVEMENT
+    // left paddle, aka Labour
+    if (keyDown(players.left.controlUp)) pL.position.y -= PADDLE_MOVEMENT
+    if (keyDown(players.left.controlDown)) pL.position.y += PADDLE_MOVEMENT
     pL.position.y = constrain(pL.position.y, pL.height/2, height-pL.height/2)
     
-    // paddleRight, aka Tory
-    if (keyDown(UP_ARROW)) pR.position.y -= PADDLE_MOVEMENT
-    if (keyDown(DOWN_ARROW)) pR.position.y += PADDLE_MOVEMENT
+    // right paddle, aka Tory
+    if (keyDown(players.right.controlUp)) pR.position.y -= PADDLE_MOVEMENT
+    if (keyDown(players.right.controlDown)) pR.position.y += PADDLE_MOVEMENT
     pR.position.y = constrain(pR.position.y, pL.height/2, height-pL.height/2)
     
-    // paddleTop, aka Green
-    if (keyDown("7")) pT.position.x -= PADDLE_MOVEMENT
-    if (keyDown("8")) pT.position.x += PADDLE_MOVEMENT
+    // top paddle, aka Green
+    if (keyDown(players.top.controlLeft)) pT.position.x -= PADDLE_MOVEMENT
+    if (keyDown(players.top.controlRight)) pT.position.x += PADDLE_MOVEMENT
     pT.position.x = constrain(pT.position.x, pT.width/2, width-pT.width/2)
     
-    // paddleBottom, aka LibDem
-    if (keyDown("v")) pB.position.x -= PADDLE_MOVEMENT
-    if (keyDown("b")) pB.position.x += PADDLE_MOVEMENT
+    // bottom paddle, aka LibDem
+    if (keyDown(players.bottom.controlLeft)) pB.position.x -= PADDLE_MOVEMENT
+    if (keyDown(players.bottom.controlRight)) pB.position.x += PADDLE_MOVEMENT
     pB.position.x = constrain(pB.position.x, pB.width/2, width-pB.width/2)
 }
 
 function updateBall()
 {
-    var pL = sprites.paddleLeft, 
-        pR = sprites.paddleRight,
-        pT = sprites.paddleTop,
-        pB = sprites.paddleBottom,
+    var pL = sprites.paddles.left, 
+        pR = sprites.paddles.right,
+        pT = sprites.paddles.top,
+        pB = sprites.paddles.bottom,
         ball = sprites.ball
     
     if (ball.bounce(pL)) 
@@ -90,10 +90,10 @@ function updateBall()
 
 function redrawEverything()
 {
-    var pL = sprites.paddleLeft, 
-        pR = sprites.paddleRight,
-        pT = sprites.paddleTop,
-        pB = sprites.paddleBottom,
+    var pL = sprites.paddles.left, 
+        pR = sprites.paddles.right,
+        pT = sprites.paddles.top,
+        pB = sprites.paddles.bottom,
         ball = sprites.ball
     
     // clear the previous frame
@@ -105,8 +105,58 @@ function redrawEverything()
     // draw emojis on top of the sprites
     // you can find the drawEmojis function in 2_tools.js
     drawEmojis(ball, 'newspaper')
-    drawEmojis(pL, 'rose', 'vertical') 
-    drawEmojis(pR, 'oak', 'vertical')
-    drawEmojis(pT, 'globe', 'horizontal')
-    drawEmojis(pB, 'dove','horizontal')
+    drawEmojis(pL, players.left.emoji, players.left.direction) 
+    drawEmojis(pR, players.right.emoji, players.right.direction)
+    drawEmojis(pT, players.top.emoji, players.top.direction)
+    drawEmojis(pB, players.bottom.emoji, players.bottom.direction)
+    
+    drawHints()
+}
+
+// if players haven't started playing yet (ie moving their paddle)
+// show them which keys to press
+function drawHints()
+{
+    var pL = sprites.paddles.left, 
+        pR = sprites.paddles.right,
+        pT = sprites.paddles.top,
+        pB = sprites.paddles.bottom
+    
+    fill(255) // white
+    textAlign(CENTER)
+    
+    checkWhoIsPlaying()
+    
+    if (!players.left.isPlaying)
+    {
+        // \n creates a new line
+        text('🅰️\n❌', pL.position.x + EMOJI_SIZE, pL.position.y)    
+    }
+    if (!players.right.isPlaying)
+    {
+        text('🔼\n🔽', pR.position.x - EMOJI_SIZE, pR.position.y)    
+    }
+    if (!players.top.isPlaying)
+    {
+        text('9️⃣0️⃣', pT.position.x, pT.position.y + EMOJI_SIZE)    
+    }
+    if (!players.bottom.isPlaying)
+    {
+        text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE)    
+    }
+    
+    
+    
+    
+}
+
+function checkWhoIsPlaying()
+{
+    if (keyDown(players.left.controlUp) || keyDown(players.left.controlDown)) players.left.isPlaying = true
+    
+    if (keyDown(players.right.controlUp) || keyDown(players.right.controlDown)) players.right.isPlaying = true
+    
+    if (keyDown(players.top.controlLeft) || keyDown(players.top.controlRight)) players.top.isPlaying = true
+    
+    if (keyDown(players.bottom.controlLeft) || keyDown(players.bottom.controlRight)) players.bottom.isPlaying = true
 }

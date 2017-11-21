@@ -1,7 +1,7 @@
 function setup()
 {
     // https://p5js.org/reference/#/p5/createCanvas
-    canvas = createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT)
+    canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     // move the canvas so it's inside our <div id="canvas">.
     canvas.parent('canvas')
     
@@ -11,28 +11,54 @@ function setup()
     sprites.ball.maxSpeed = BALL_SPEED
     sprites.ball.shapeColor = 'rgba(255, 255, 255, 0)' // transparent
     resetBall()
-        
-    // paddleLeft, aka Labour
-    sprites.paddleLeft = createSprite(EMOJI_SIZE/2, height/2, EMOJI_SIZE, EMOJI_SIZE*PADDLE_SIZE)
-    sprites.paddleLeft.immovable = true // this prevents the paddle from being moved by the ball
-    sprites.paddleLeft.shapeColor = 'rgba(255, 0, 0, 0.5)'
-    sprites.paddleLeft.size = PADDLE_SIZE
-        
-    // paddleRight, aka Tory
-    sprites.paddleRight = createSprite(width-EMOJI_SIZE/2, height/2, EMOJI_SIZE, EMOJI_SIZE*PADDLE_SIZE)
-    sprites.paddleRight.immovable = true
-    sprites.paddleRight.shapeColor = 'rgba(0, 0, 255, 0.5)'
-    sprites.paddleRight.size = PADDLE_SIZE
     
-    // paddleTop, aka Green
-    sprites.paddleTop = createSprite(width/2, EMOJI_SIZE/2, EMOJI_SIZE*PADDLE_SIZE, EMOJI_SIZE)
-    sprites.paddleTop.immovable = true
-    sprites.paddleTop.shapeColor = 'rgba(0, 255, 0, 0.5)'
-    sprites.paddleTop.size = PADDLE_SIZE
+    // paddles, aka the parties
+    createPaddle('left') // aka Labour
+    createPaddle('right') // aka Tory 
+    createPaddle('top') // aka Green
+    createPaddle('bottom') // aka Lib-Dem
+}
+
+function createPaddle(name)
+{
+    var sprite, x, y, width, height, 
+        data = players[name] 
     
-    // paddleBottom, aka LibDem
-    sprites.paddleBottom = createSprite(width/2, height-EMOJI_SIZE/2, EMOJI_SIZE*PADDLE_SIZE, EMOJI_SIZE)
-    sprites.paddleBottom.immovable = true
-    sprites.paddleBottom.shapeColor = 'rgba(255, 255, 0, 0.5)'
-    sprites.paddleBottom.size = PADDLE_SIZE
+    console.log('createPaddle ' + name)
+    console.log(data)
+    
+    if (name == 'left')
+    {
+        x = EMOJI_SIZE / 2
+        y = CANVAS_HEIGHT / 2
+    }
+    else if (name == 'right')
+    {
+        x = CANVAS_WIDTH - EMOJI_SIZE / 2
+        y = CANVAS_HEIGHT / 2   
+    }
+    else if (name == 'top')
+    {
+        x = CANVAS_WIDTH / 2, 
+        y = EMOJI_SIZE / 2   
+    }
+    else if (name == 'bottom')
+    {
+        x = CANVAS_WIDTH / 2
+        y = CANVAS_HEIGHT - EMOJI_SIZE/2  
+    }
+
+    width = (data.direction == 'vertical') ? EMOJI_SIZE : EMOJI_SIZE * PADDLE_SIZE
+    height = (data.direction == 'horizontal') ? EMOJI_SIZE : EMOJI_SIZE * PADDLE_SIZE
+    // (condition) ? yes : no
+    // this is another way to express if (condition) { yes } else { no }
+        
+    sprite = createSprite(x, y, width, height)
+    sprite.immovable = true // this prevents the paddle from being moved by the ball
+    sprite.shapeColor = data.color
+    sprite.size = PADDLE_SIZE
+    
+    sprites.paddles[name] = sprite // store the sprite in the global sprites object
+    
+    return sprite // return the sprite, because why not
 }

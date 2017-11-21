@@ -6,5 +6,5 @@
 function preload()
 {
     // preload all the emojis into a spritesheet
-    spritesheets.emojis = loadSpriteSheet(SPRITE_SHEET, FRAMES)
+    spritesheets.emojis = loadSpriteSheet(SPRITE_SHEET, EMOJI_FRAMES)
 }

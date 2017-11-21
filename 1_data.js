@@ -1,7 +1,7 @@
 /** 
     * Any data that you need to access/manipulate throughout the program 
     * must be declared outside of a function
-
+    *
     * Data which is not meant to change is "constant"
     * aka const
     * conventionally constant names are UPPERCASE
@@ -20,21 +20,7 @@ const SWING_FACTOR = 0.4 // the ball will bounce off paddles at an angle, the fu
 // emoji "coordinates" at https://unicodey.com/emoji-data/table.htm
 const SPRITE_SHEET = 'assets/sheet_twitter_20_indexed_256.png'
 const EMOJI_SIZE = 20
-
-
-/**
-    * Data that changes while the program runs is "variable"
-    * aka var
-    */
-
-var canvas = null // the canvas for the whole game
-var sprites = {} // an object to collect all the sprites (ie the game pieces)
-var swing = 0 // the angle at which the ball will take when bouncing off paddles
-
-var spritesheets = {}
-var animations = {}
-
-var FRAMES = 
+const EMOJI_FRAMES = 
 [
     {
         name: 'newspaper',
@@ -86,4 +72,61 @@ var FRAMES =
             height: EMOJI_SIZE
         }
     }
-]    
+]
+
+/**
+    * Data that changes while the program runs is "variable"
+    * aka var
+    */
+
+var canvas = null // the canvas for the whole game
+var swing = 0 // the angle at which the ball will take when bouncing off paddles
+var spritesheets = {} // an object to collect all the spritesheets (images)
+var sprites = // an object to collect all the sprites (ie the game pieces)
+{
+    ball: null,
+    paddles: {} // there will be 4 paddles
+}
+var players = // an object with data for each player
+{
+    left: 
+    {
+        nickname: 'Labour',
+        isPlaying: false,
+        controlUp: 'a',
+        controlDown: 'x',
+        emoji: 'rose', 
+        direction: 'vertical',
+        color: 'rgba(255, 0, 0, 0.5)',
+    },
+    right: 
+    {
+        nickname: 'Tory',
+        isPlaying: false,
+        controlUp: 38, // UP_ARROW
+        controlDown: 40, // DOWN_ARROW
+        emoji: 'oak', 
+        direction: 'vertical',
+        color: 'rgba(0, 0, 255, 0.5)'
+    },
+    top: 
+    {
+        nickname: 'Green',
+        isPlaying: false,
+        controlLeft: '9',
+        controlRight: '0',
+        emoji: 'globe', 
+        direction: 'horizontal',
+        color: 'rgba(0, 255, 0, 0.5)'
+    },
+    bottom: 
+    {
+        nickname: 'Lib-Dem',
+        isPlaying: false,
+        controlLeft: 'b',
+        controlRight: 'm',
+        emoji: 'dove', 
+        direction: 'horizontal',
+        color: 'rgba(255, 255, 0, 0.5)'
+    }
+}
