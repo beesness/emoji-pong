@@ -111,6 +111,8 @@ function redrawEverything()
     drawEmojis(pB, players.bottom.emoji, players.bottom.direction)
     
     drawHints()
+    
+    ball.debug = pL.debug = pR.debug = pT.debug = pB.debug = mouseIsPressed
 }
 
 // if players haven't started playing yet (ie moving their paddle)
@@ -143,11 +145,7 @@ function drawHints()
     if (!players.bottom.isPlaying)
     {
         text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE)    
-    }
-    
-    
-    
-    
+    } 
 }
 
 function checkWhoIsPlaying()
