@@ -71,6 +71,16 @@ const EMOJI_FRAMES =
             width: EMOJI_SIZE,
             height: EMOJI_SIZE
         }
+    },
+    {
+        name: 'toxic',
+        frame: 
+        {
+            x: 1*EMOJI_SIZE,
+            y: 10*EMOJI_SIZE,
+            width: EMOJI_SIZE,
+            height: EMOJI_SIZE
+        }
     }
 ]
 

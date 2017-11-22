@@ -1,5 +1,8 @@
 function draw() 
-{   
+{  
+    // clear the previous frame
+    clear()
+    
     // if players are pressing keys, move the paddle(s)
     updatePaddles()
     
@@ -88,7 +91,7 @@ function updateBall()
     }
     
     // experiment
-    // press D to change the ball direction 
+    // press D to change the "ball" direction 
     if (keyDown('d'))
     {
         // change the  ball rotation
@@ -100,6 +103,21 @@ function updateBall()
         particle.setSpeed(ball.getSpeed() + 5, ball.getDirection())
         particle.life = 100
     }
+    
+    // another experiment
+    // press C to draw a circle orbiting around the "ball"
+    if (keyDown('c'))
+    {
+        var angle = window.angle || Math.PI / 4,
+            radius = EMOJI_SIZE * 2,
+            x = radius * Math.cos(angle) + ball.position.x - EMOJI_SIZE/2,
+            y = ball.position.y - radius * Math.sin(angle) - EMOJI_SIZE/2
+        
+        spritesheets.emojis.drawFrame('toxic', x, y)
+        
+        // increment the angle and store it in a global var (window.angle)
+        window.angle = angle + 3 * (Math.PI / 180)
+    }
 }
 
 function redrawEverything()
@@ -109,9 +127,6 @@ function redrawEverything()
         pT = sprites.paddles.top,
         pB = sprites.paddles.bottom,
         ball = sprites.ball
-    
-    // clear the previous frame
-    clear()
     
     // draw all the sprites
     drawSprites()
