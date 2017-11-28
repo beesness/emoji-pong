@@ -22,11 +22,12 @@
             <!-- the p5 canvas will be generated inside this-->
         </div>
         <script>
-            window.onload = function() 
-            {
-                var gui = new dat.GUI()
-                gui.add(window, 'swing').listen()
-            }
+            var gui = new dat.GUI()
+            gui.add(window, 'swing').listen()
+            gui.add(players.left, 'score').name(players.left.nickname).listen()
+            gui.add(players.right, 'score').name(players.right.nickname).listen()
+            gui.add(players.top, 'score').name(players.top.nickname).listen()
+            gui.add(players.bottom, 'score').name(players.bottom.nickname).listen()
         </script>
     </body>
 </html>
