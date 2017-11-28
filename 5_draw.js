@@ -4,7 +4,10 @@ function draw()
     clear()
     
     // if players are pressing keys, move the paddle(s)
-    updatePaddles()
+    updatePaddle('left')
+    updatePaddle('right')
+    updatePaddle('top')
+    updatePaddle('bottom')
     
     // check if the ball is bouncing off any paddle
     // or if the ball is going off screen (ie if one player missed it)
@@ -14,80 +17,58 @@ function draw()
     redrawEverything()
 }
 
-function updatePaddles()
+function updatePaddle(name)
 {
-    var pL = sprites.paddles.left, 
-        pR = sprites.paddles.right,
-        pT = sprites.paddles.top,
-        pB = sprites.paddles.bottom,
+    var paddle = sprites.paddles[name],
+        player = players[name],
         ball = sprites.ball
     
-    // left paddle, aka Labour
-    if (keyDown(players.left.controlUp)) pL.position.y -= PADDLE_MOVEMENT
-    if (keyDown(players.left.controlDown)) pL.position.y += PADDLE_MOVEMENT
-    pL.position.y = constrain(pL.position.y, pL.height/2, height-pL.height/2)
+    // if the paddle has been removed, exit this function immediately
+    if (paddle.removed) return false
     
-    // right paddle, aka Tory
-    if (keyDown(players.right.controlUp)) pR.position.y -= PADDLE_MOVEMENT
-    if (keyDown(players.right.controlDown)) pR.position.y += PADDLE_MOVEMENT
-    pR.position.y = constrain(pR.position.y, pL.height/2, height-pL.height/2)
-    
-    // top paddle, aka Green
-    if (keyDown(players.top.controlLeft)) pT.position.x -= PADDLE_MOVEMENT
-    if (keyDown(players.top.controlRight)) pT.position.x += PADDLE_MOVEMENT
-    pT.position.x = constrain(pT.position.x, pT.width/2, width-pT.width/2)
-    
-    // bottom paddle, aka LibDem
-    if (keyDown(players.bottom.controlLeft)) pB.position.x -= PADDLE_MOVEMENT
-    if (keyDown(players.bottom.controlRight)) pB.position.x += PADDLE_MOVEMENT
-    pB.position.x = constrain(pB.position.x, pB.width/2, width-pB.width/2)
+    if (player.direction == 'vertical')
+    {
+        if (keyDown(player.controlUp)) paddle.position.y -= PADDLE_MOVEMENT
+        if (keyDown(player.controlDown)) paddle.position.y += PADDLE_MOVEMENT
+        paddle.position.y = constrain(paddle.position.y, paddle.height/2, height-paddle.height/2) 
+    }
+    else
+    {
+        if (keyDown(player.controlLeft)) paddle.position.x -= PADDLE_MOVEMENT
+        if (keyDown(player.controlRight)) paddle.position.x += PADDLE_MOVEMENT
+        paddle.position.x = constrain(paddle.position.x, paddle.width/2, width-paddle.width/2)
+    }
 }
 
 function updateBall()
 {
-    var pL = sprites.paddles.left, 
-        pR = sprites.paddles.right,
-        pT = sprites.paddles.top,
-        pB = sprites.paddles.bottom,
-        ball = sprites.ball
+    var ball = sprites.ball
     
-    if (ball.bounce(pL)) 
-    {
-        swing = (ball.position.y - pL.position.y) * SWING_FACTOR
-        ball.setSpeed(ball.getSpeed(), ball.getDirection() + swing)
-    }
-    else if (ball.bounce(pR)) 
-    {
-        swing = (ball.position.y - pR.position.y) * SWING_FACTOR
-        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
-    }
-    else if (ball.bounce(pT)) 
-    {
-        swing = (ball.position.x - pT.position.x) * SWING_FACTOR
-        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
-    }
-    else if (ball.bounce(pB)) 
-    {
-        swing = (ball.position.x - pB.position.x) * SWING_FACTOR
-        ball.setSpeed(ball.getSpeed(), ball.getDirection() - swing)
-    }
+    bounceBall('left')
+    bounceBall('right')
+    bounceBall('top')
+    bounceBall('bottom')
     
     // what happens when players miss
-    if (ball.position.x < 0) // paddleLeft missed
+    if (ball.position.x < 0) // paddles.left missed
     {
         resetBall()
+        updateScore('left',-1)
     }
     else if (ball.position.x > width) // paddleRight missed
     {
         resetBall()
+        updateScore('right',-1)
     }
     else if (ball.position.y < 0) // paddleTop missed
     {
         resetBall()
+        updateScore('top',-1)
     }
     else if (ball.position.y > height) // paddleBottom missed
     {
         resetBall()
+        updateScore('bottom',-1)
     }
     
     // experiment
@@ -120,6 +101,59 @@ function updateBall()
     }
 }
 
+function bounceBall(side)
+{
+    var player = players[side],
+        paddle = sprites.paddles[side],
+        wall = sprites.walls[side],
+        ball = sprites.ball
+    
+    // what if the player missed the ball?
+    if (ball.bounce(wall))
+    {
+        updateScore(side, -1)
+        ball.setSpeed(ball.getSpeed() - BALL_SPEED_DECREMENT)
+        // resetBall()
+    }
+    
+    // if the paddle has been removed, exit this function immediately
+    if (paddle.removed) return false
+    
+    if (ball.bounce(paddle)) 
+    {
+        // depending on the player's direction, we'll consider the vertical or horizontal distance of the ball from the paddle centre
+        var axis = (player.direction == 'vertical') ? 'y' : 'x'
+        swing = (ball.position[axis] - paddle.position[axis]) * SWING_FACTOR
+        ball.setSpeed(ball.getSpeed() + BALL_SPEED_INCREMENT, ball.getDirection() + swing)
+    }
+}
+
+function updateScore(name, increment)
+{
+    var player = players[name],
+        sprite = sprites.paddles[name]
+
+    player.score += increment
+    
+    if (player.score <= 0) 
+    {
+        // game over
+        // console.log('game over for ' + player.nickname)
+        sprite.remove()
+        player.score = 0
+        player.isPlaying = false
+    }    
+    else 
+    {
+        // update sprite size
+        sprite.size = player.score
+        
+        // update sprite width / height
+        var dimension = (player.direction == 'horizontal') ? 'width' : 'height'
+        sprite[dimension] = sprite.size * EMOJI_SIZE 
+    }    
+}
+
 function redrawEverything()
 {
     var pL = sprites.paddles.left, 
@@ -127,6 +161,9 @@ function redrawEverything()
         pT = sprites.paddles.top,
         pB = sprites.paddles.bottom,
         ball = sprites.ball
+    
+    // white background
+    background(255) 
     
     // draw all the sprites
     drawSprites()
@@ -153,27 +190,26 @@ function drawHints()
         pT = sprites.paddles.top,
         pB = sprites.paddles.bottom
     
-    fill(255) // white
     textAlign(CENTER)
     
     checkWhoIsPlaying()
     
-    if (!players.left.isPlaying)
+    if (!players.left.isPlaying && players.left.score>0)
     {
         // \n creates a new line
-        text('🅰️\n❌', pL.position.x + EMOJI_SIZE, pL.position.y)    
+        text('🅰️\n❌', pL.position.x + EMOJI_SIZE*2, pL.position.y)    
     }
-    if (!players.right.isPlaying)
+    if (!players.right.isPlaying && players.right.score>0)
     {
-        text('🔼\n🔽', pR.position.x - EMOJI_SIZE, pR.position.y)    
+        text('🔼\n🔽', pR.position.x - EMOJI_SIZE*2, pR.position.y)    
     }
-    if (!players.top.isPlaying)
+    if (!players.top.isPlaying && players.top.score>0)
     {
-        text('9️⃣0️⃣', pT.position.x, pT.position.y + EMOJI_SIZE)    
+        text('9️⃣0️⃣', pT.position.x, pT.position.y + EMOJI_SIZE*2)    
     }
-    if (!players.bottom.isPlaying)
+    if (!players.bottom.isPlaying && players.bottom.score>0)
     {
-        text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE)    
+        text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE*2)    
     } 
 }
 

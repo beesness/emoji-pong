@@ -12,6 +12,9 @@
     */
 function drawEmojis(sprite, frame, direction)
 {
+    // if the sprite has been removed, exit this function immediately
+    if (sprite.removed) return false
+        
     // if the sprite doesn't have a size property, then we'll assume it's 1 (square)
     var size = sprite.size || 1
     
@@ -32,6 +35,8 @@ function drawEmojis(sprite, frame, direction)
         
         spritesheets.emojis.drawFrame(frame, x, y)
     }
+    
+    return true
 }
 
 /**
