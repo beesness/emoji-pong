@@ -11,8 +11,8 @@ const CANVAS_WIDTH = 630
 const CANVAS_HEIGHT = 630
 
 const BALL_SPEED = 4 //  pixels per frame
-const BALL_SPEED_INCREMENT = 0.6 //  every time the ball hits a paddle, it speeds up
-const BALL_SPEED_DECREMENT = 0.4 //  every time the ball hits a wall, it slows down
+const BALL_SPEED_INCREMENT = 0.8 //  every time the ball hits a paddle, it speeds up
+const BALL_SPEED_DECREMENT = 0.2 //  every time the ball hits a wall, it slows down
 const PADDLE_SIZE = 5 // how many squares is a paddle
 const PADDLE_MOVEMENT = 7 // how many pixels per frame do paddles move 
 const SWING_FACTOR = 0.4 // the ball will bounce off paddles at an angle, the further from the paddle centre the bigger the angle
@@ -96,7 +96,7 @@ var swing = 0 // the angle at which the ball will take when bouncing off paddles
 var spritesheets = {} // an object to collect all the spritesheets (images)
 var sprites = // an object to collect all the sprites (ie the game pieces)
 {
-    ball: null,
+    ball: {},
     paddles: {}, // there will be 4 paddles
     walls: {} // there will be 4 walls
 }

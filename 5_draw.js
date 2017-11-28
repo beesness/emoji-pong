@@ -49,41 +49,14 @@ function updateBall()
     bounceBall('top')
     bounceBall('bottom')
     
-    // what happens when players miss
-    if (ball.position.x < 0) // paddles.left missed
-    {
-        resetBall()
-        updateScore('left',-1)
-    }
-    else if (ball.position.x > width) // paddleRight missed
-    {
-        resetBall()
-        updateScore('right',-1)
-    }
-    else if (ball.position.y < 0) // paddleTop missed
-    {
-        resetBall()
-        updateScore('top',-1)
-    }
-    else if (ball.position.y > height) // paddleBottom missed
-    {
-        resetBall()
-        updateScore('bottom',-1)
-    }
+    if (mouseIsPressed) console.log('ball speed: ' + ball.getSpeed().toFixed(1) + ' | x: ' + ball.position.x.toFixed(0) + ' | y: ' + ball.position.y.toFixed(0))
+    
+    // if the ball slows down too much, speed it up and change its direction
+    if (ball.getSpeed() <= BALL_SPEED/2) upsetBall()    
     
     // experiment
-    // press D to change the "ball" direction 
-    if (keyDown('d'))
-    {
-        // change the  ball rotation
-        ball.rotation += random(-20, 20)
-        ball.addSpeed(0.2, ball.rotation)
-        
-        // particles, just for the heck of it
-        var particle = createSprite(ball.position.x, ball.position.y, 5, 5)
-        particle.setSpeed(ball.getSpeed() + 5, ball.getDirection())
-        particle.life = 100
-    }
+    // press D to upset the ball 
+    if (keyDown('d')) upsetBall()
     
     // another experiment
     // press C to draw a circle orbiting around the "ball"
@@ -99,6 +72,28 @@ function updateBall()
         // increment the angle and store it in a global var (window.angle)
         window.angle = angle + 3 * (Math.PI / 180)
     }
+    
+    // constrain the ball within the canvas 
+    // sometimes it jumps out (collision detection with the walls fails)
+    ball.position.x = constrain(ball.position.x, 0, width)
+    ball.position.y = constrain(ball.position.y, 0, height)
+}
+
+function upsetBall()
+{
+    var ball = sprites.ball
+ 
+    // console.log('upsetBall ' + ball.getSpeed())
+    
+    // change the ball rotation
+    ball.rotation += random(-EMOJI_SIZE, EMOJI_SIZE)
+    // and its speed
+    ball.addSpeed(BALL_SPEED_INCREMENT, ball.rotation)
+
+    // particles, just for the heck of it
+    var particle = createSprite(ball.position.x, ball.position.y, 5, 5)
+    particle.setSpeed(ball.getSpeed() + BALL_SPEED_INCREMENT, ball.getDirection())
+    particle.life = 120   
 }
 
 function bounceBall(side)
@@ -197,19 +192,19 @@ function drawHints()
     if (!players.left.isPlaying && players.left.score>0)
     {
         // \n creates a new line
-        text('🅰️\n❌', pL.position.x + EMOJI_SIZE*2, pL.position.y)    
+        text('🅰️\n❌', pL.position.x + EMOJI_SIZE, pL.position.y)    
     }
     if (!players.right.isPlaying && players.right.score>0)
     {
-        text('🔼\n🔽', pR.position.x - EMOJI_SIZE*2, pR.position.y)    
+        text('🔼\n🔽', pR.position.x - EMOJI_SIZE, pR.position.y)    
     }
     if (!players.top.isPlaying && players.top.score>0)
     {
-        text('9️⃣0️⃣', pT.position.x, pT.position.y + EMOJI_SIZE*2)    
+        text('9️⃣0️⃣', pT.position.x, pT.position.y + EMOJI_SIZE)    
     }
     if (!players.bottom.isPlaying && players.bottom.score>0)
     {
-        text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE*2)    
+        text('🅱️ Ⓜ️', pB.position.x, pB.position.y - EMOJI_SIZE)    
     } 
 }
 
